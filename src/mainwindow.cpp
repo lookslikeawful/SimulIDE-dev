@@ -148,6 +148,8 @@ void MainWindow::readSettings()
 
     m_autoUpdt = 1;
     if( m_settings->contains("autoUpdt") ) m_autoUpdt = m_settings->value("autoUpdt").toInt();
+
+    Circuit::self()->setBackgroundColor(m_settings->value("Circuit/backgroundColor").value<QColor>());
 }
 
 void MainWindow::writeSettings()

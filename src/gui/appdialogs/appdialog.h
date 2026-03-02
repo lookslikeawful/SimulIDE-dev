@@ -6,6 +6,7 @@
 #pragma once
 
 #include <QDialog>
+#include <QColorDialog>
 
 #include "ui_appdialog.h"
 
@@ -62,6 +63,8 @@ class AppDialog : public QDialog, private Ui::AppDialog
     private slots:
         void on_fontName_currentFontChanged( const QFont &f );
 
+        void on_changeBackColorButton_clicked();
+
     private:
         void updtHelp();
         void updtSpeed();
@@ -78,4 +81,6 @@ class AppDialog : public QDialog, private Ui::AppDialog
         uint64_t m_stepsPS;
         uint64_t m_stepSize;
         uint64_t m_psPerSec;
+
+        QColor m_color;
 };

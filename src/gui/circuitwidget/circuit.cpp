@@ -1169,7 +1169,7 @@ void Circuit::drawBackground( QPainter* painter, const QRectF &rect )
     painter->drawRect( m_scenerect );
     return;*/
 
-    painter->fillRect( m_scenerect, QColor( 240, 240, 210 ) );
+    painter->fillRect( m_scenerect, QColor( m_backgroundColor ) );
     painter->setPen( QColor( 210, 210, 210 ) );
 
     if( m_hideGrid ) return;
@@ -1278,6 +1278,22 @@ void Circuit::setUndoSteps( int steps )
     else if( steps > 1000 ) steps = 5000;
     m_maxUndoSteps = steps;
     MainWindow::self()->settings()->setValue( "Circuit/undoSteps", QString::number(steps) );
+}
+
+void Circuit::setBackgroundColor(const QColor& color)
+{
+    if (m_backgroundColor == color) {
+        return;
+    }
+
+    m_backgroundColor = color;
+    MainWindow::self()->settings()->setValue("Circuit/backgroundColor", m_backgroundColor);
+    update();
+}
+
+QColor Circuit::backgroundColor() const
+{
+    return m_backgroundColor;
 }
 
 #include "moc_circuit.cpp"

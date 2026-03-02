@@ -213,6 +213,14 @@ void AppDialog::on_undo_steps_valueChanged( int steps )
     Circuit::self()->setUndoSteps( steps );
 }
 
+void AppDialog::on_changeBackColorButton_clicked()
+{
+    QColor color = QColorDialog::getColor( m_color, this, tr("Select Color"), QColorDialog::DontUseNativeDialog );
+    if(!color.isValid()) return;
+    m_color = color;
+    Circuit::self()->setBackgroundColor(m_color);
+}
+
 // Simulation Settings ----------------------
 void AppDialog::on_simSpeedPerSlider_valueChanged( int speed )
 {
@@ -325,4 +333,3 @@ void AppDialog::on_fontName_currentFontChanged( const QFont &f )
 {
     MainWindow::self()->setDefaultFontName( f.family() );
 }
-

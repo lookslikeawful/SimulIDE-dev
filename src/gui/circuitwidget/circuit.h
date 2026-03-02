@@ -57,6 +57,9 @@ class Circuit : public QGraphicsScene
         int autoBck();
         void setAutoBck( int secs );
 
+        void setBackgroundColor(const QColor& color);
+        QColor backgroundColor() const;
+
         void removeItems();
         void removeComp( Component* comp) ;
         void compRemoved( bool removed ) { m_compRemoved = removed; }
@@ -169,6 +172,8 @@ class Circuit : public QGraphicsScene
         void updatePinName( QString* name );
 
         void setSize( int width, int height );
+
+        QColor m_backgroundColor = QColor(240, 240, 210);
 
         QString m_filePath;
         QString m_backupPath;

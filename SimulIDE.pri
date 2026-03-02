@@ -150,11 +150,11 @@ INCLUDEPATH += $$MOC_DIR
 
 DESTDIR = $$TARGET_PREFIX
 
-runLrelease.commands = \
-    lrelease $$PWD/resources/translations/*.ts; \
-    lrelease $$PWD/resources/translations/qt/*.ts; \
-    $(MOVE) $$PWD/resources/translations/*.qm $$PWD/resources/qm; \
-    $(MOVE) $$PWD/resources/translations/qt/*.qm $$PWD/resources/qm;
+# runLrelease.commands = \
+#     lrelease $$PWD/resources/translations/*.ts; \
+#     lrelease $$PWD/resources/translations/qt/*.ts; \
+#     $(MOVE) $$PWD/resources/translations/*.qm $$PWD/resources/qm; \
+#     $(MOVE) $$PWD/resources/translations/qt/*.qm $$PWD/resources/qm;
 
 QMAKE_EXTRA_TARGETS += runLrelease
 PRE_TARGETDEPS      += runLrelease
