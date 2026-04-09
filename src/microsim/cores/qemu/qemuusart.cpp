@@ -14,7 +14,7 @@
 
 #include "simulator.h"
 
-QemuUsart::QemuUsart(QemuDevice* mcu, QString name, int n, uint32_t* clk, uint64_t memStart, uint64_t memEnd )
+QemuUsart::QemuUsart( QemuDevice* mcu, QString name, int n, uint32_t* clk, uint64_t memStart, uint64_t memEnd )
          : QemuModule( mcu, name, n, clk, memStart, memEnd )
          , UsartModule( nullptr, mcu->getId()+"-"+name )
 {
@@ -22,7 +22,7 @@ QemuUsart::QemuUsart(QemuDevice* mcu, QString name, int n, uint32_t* clk, uint64
 
     this->setBaudRate( 9600 );
 }
-QemuUsart::~QemuUsart( ){}
+QemuUsart::~QemuUsart(){}
 
 void QemuUsart::enable( bool e )
 {
@@ -46,12 +46,12 @@ void QemuUsart::setRxPin( IoPin* pin )
     m_receiver->setPins({pin});
 }
 
-IoPin** QemuUsart::getTxPinPointer()
+IoPin** QemuUsart::getTxPinPtr()
 {
     return m_sender->getPinPointer();
 }
 
-IoPin** QemuUsart::getRxPinPointer()
+IoPin** QemuUsart::getRxPinPtr()
 {
     return m_receiver->getPinPointer();
 }
@@ -69,7 +69,7 @@ void QemuUsart::bufferEmpty()
 void QemuUsart::frameSent( uint8_t data )
 {
     //qDebug() << "QemuUsart::frameSent"<< m_number;
-    if( m_monitor ) m_monitor->printOut( data );
+    printOut( data );
     //m_sender->raiseInt();
 }
 

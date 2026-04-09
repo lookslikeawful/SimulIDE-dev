@@ -16,6 +16,8 @@ class QNetworkReply;
 
 class Installer : public QWidget, private Ui::installer
 {
+    Q_OBJECT
+
     public:
         Installer( QWidget* parent );
 
@@ -30,6 +32,9 @@ class Installer : public QWidget, private Ui::installer
 
         QStringList getGroupItems( QString group ) { return m_groupItemList.value( group ); }
 
+    public slots:
+        void on_updtButton_clicked();
+
     private:
         //void addItemInstaller( QString itemStr, int row );
         void updtReady();
@@ -38,6 +43,7 @@ class Installer : public QWidget, private Ui::installer
 
         bool m_checkUpdates;
         bool m_updated;
+        bool m_changed;
 
         QDir m_compsDir;
         QString m_compsUrl;

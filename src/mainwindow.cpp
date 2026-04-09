@@ -78,18 +78,22 @@ MainWindow::MainWindow()
     if( m_settings->contains("fontName") ) fontName = m_settings->value("fontName").toString();
     setDefaultFontName( fontName );
 
-    QFont df=qApp->font();
+    QFont df = qApp->font();
     df.setFamily( fontName );
     qApp->setFont( df );
     setFont( df );
     //----------------------------------------------
 
     QApplication::setStyle( QStyleFactory::create("Fusion") ); //applyStyle();
+
     createWidgets();
     m_circuitW->newCircuit();
     readSettings();
 
-    if( m_autoUpdt ) m_installer->checkForUpdates();
+    if( m_autoUpdt ){
+        QTimer::singleShot( 5000, CircuitWidget::self()
+                           , [=]()->void{ m_installer->checkForUpdates(); } );
+    }
 
     QString backPath = getConfigPath( "backup.sim2" );
     if( QFile::exists( backPath ) )
@@ -406,7 +410,7 @@ QString MainWindow::getDataFilePath( QString file )
     QString path = getUserFilePath( file );           // File in user data folder
 
     if( path.isEmpty() || !QFileInfo::exists( path ) )
-        path = getConfigPath("data/"+file );          // File in SimulIDE data folder
+        path = getConfigPath("data/"+file );          // File in Config data folder
 
     if( path.isEmpty() || !QFileInfo::exists( path ) )
         path = ":/"+file;                             // File in SimulIDE resources

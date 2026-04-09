@@ -6,6 +6,7 @@
 #include <QDebug>
 
 #include "qemumodule.h"
+#include "utils.h"
 
 QemuModule::QemuModule( QemuDevice* mcu, QString name, int n, uint32_t* clk, uint64_t memStart, uint64_t memEnd )
 {
@@ -21,7 +22,7 @@ QemuModule::QemuModule( QemuDevice* mcu, QString name, int n, uint32_t* clk, uin
     m_arena = m_device->getArena();
 
     m_device->addModule( this );
-    qDebug() << "QemuModule::QemuModule" << m_name << QString::number( memStart, 16 ) <<QString::number( memEnd, 16 );
+    //qDebug() << "QemuModule::QemuModule" << m_name << toHex32( memStart ) << toHex32( memEnd );
 }
 QemuModule::~QemuModule(){}
 
@@ -54,7 +55,7 @@ void QemuModule::readRegister()
 void QemuModule::setInterrupt( uint8_t number, uint8_t level )
 {
     m_arena->irqNumber = number;
-    m_arena->irqLevel  = level;
+    m_arena->irqLevel  = level? 1:0;
     //m_arena->qemuAction = SIM_INTERRUPT;
     //qDebug() << "QemuModule::setInterrupt" << m_name << number << level;
 }

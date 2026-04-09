@@ -161,8 +161,8 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
  static bool m_boardMode;
 
         virtual void contextMenu( QGraphicsSceneContextMenuEvent* event, QMenu* menu );
-        void rotateCW();
-        void rotateCCW();
+        virtual void rotateCW();
+        virtual void rotateCCW();
         void slotH_flip();
         void slotV_flip();
 
@@ -221,6 +221,7 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
         QPixmap* m_backPixmap;  // Background Pixmap
 
         QColor  m_color;
+
         QRectF  m_area;         // bounding rect
         QPointF m_eventpoint;
 
@@ -229,6 +230,7 @@ class Component : public CompBase, public QGraphicsItem, public Updatable
 
         QList<Connector*> m_conMoveList;
         QList<Component*> m_compMoveList;
+        QList<ConnectorLine*> m_lineMoveList;
 
         std::vector<Pin*> m_pin;
         QList<Pin*> m_signalPin;

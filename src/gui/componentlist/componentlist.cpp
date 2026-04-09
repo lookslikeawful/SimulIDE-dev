@@ -21,6 +21,7 @@
 #include "circuitwidget.h"
 #include "installer.h"
 #include "chip.h"
+#include "proputils.h"
 #include "utils.h"
 
 #include "esp32.h"
@@ -77,7 +78,7 @@ void ComponentList::createList()
     QDir compSetDir = MainWindow::self()->getConfigPath("data");
     if( compSetDir.exists() ) LoadCompSetAt( compSetDir );
 
-    compSetDir = QString("./data");          // FIXME: provisional, used by QemuDevice
+    compSetDir.setPath("./data");          // FIXME: provisional, used by QemuDevice
     LoadCompSetAt( compSetDir );
 
     MainWindow::self()->installer()->loadInstalled(); // Load Installed components
@@ -101,7 +102,7 @@ void ComponentList::loadTest( QString userDir )
     QDir compSetDir( userDir );
     if( !compSetDir.cd("test") ) return;
 
-    m_compSetDir = userDir;
+    m_compSetDir.setPath( userDir );
 
     QStringList dirList = compSetDir.entryList( {"*"}, QDir::Dirs );
     if( dirList.isEmpty() ) return;
@@ -242,7 +243,7 @@ void ComponentList::loadXml( QString xmlFile )
         }
         if( !catItem ) continue;
 
-        QString type = reader.attributes().value("type").toString();
+        QString type   = reader.attributes().value("type"  ).toString();
         QString folder = reader.attributes().value("folder").toString();
 
 
@@ -265,6 +266,7 @@ void ComponentList::loadXml( QString xmlFile )
             }
             else
             {
+                QIcon ico;
                 if( reader.attributes().hasAttribute("icon") )
                 {
                     icon = reader.attributes().value("icon").toString();
@@ -279,6 +281,37 @@ void ComponentList::loadXml( QString xmlFile )
 
                     if( !QFile::exists( nameFolder+".sim2" )
                      && !QFile::exists( nameFolder+".sim1" ) ) compFolder = nameFolder;
+
+                    if( icon.isEmpty() )  // Get icon from Image in Circuit
+                    {
+                        QString subC = compFolder+"/"+name+".sim2";
+                        if( QFile::exists( subC ) )
+                        {
+                            QStringList lines = fileToStringList( subC, "ComponentList::loadXml");
+                            for( QString line : lines )
+                            {
+                                if( !line.startsWith("<item itemtype=\"Image\"") ) continue;
+                                QVector<propStr_t> properties = parseXmlProps( line );
+                                for( propStr_t prop : properties )
+                                {
+                                    if( prop.name != "BckGndData") continue;
+
+                                    QStringView dataRef{prop.value};
+                                    QByteArray ba;
+                                    bool ok;
+                                    for( int i=0; i<dataRef.size(); i+=2 )
+                                    {
+                                        QStringView ch = dataRef.mid( i, 2 );
+                                        ba.append( ch.toInt( &ok, 16 ) );
+                                    }
+                                    QPixmap ic;
+                                    ic.loadFromData( ba );
+                                    ico = QIcon( ic );
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
                 m_dirFileList[ name ] = compFolder;
                 m_dataFileList[ name ] = xmlFile;   // Save xml File used to create this item
@@ -286,7 +319,13 @@ void ComponentList::loadXml( QString xmlFile )
                 if( reader.attributes().hasAttribute("info") )
                     name += "???"+reader.attributes().value("info").toString();
 
-                addItem( name, catItem, icon, type );
+                if( !icon.isEmpty() )
+                {
+                    QPixmap ic( icon );
+                    ico = QIcon( ic );
+                }
+
+                addItem( name, catItem, ico, type );
                 m_xmlItems.append( name );
             }
             reader.skipCurrentElement();
